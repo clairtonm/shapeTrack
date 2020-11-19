@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{%block measure %}
+    <div class="container p-5"> 
+        <form class="row align-items-center" action="/" method="POST">   
+            <div class="col-sm-3 form-group">
+                <label for="Weight-form">Weight</label>
+                <div class="input-group" style="width: 150px;">
+                    <input type="number" class="form-control" aria-describedby="weight-input-group" name="weight-input" id="weight-input">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="weight-input-group">kg</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="height-form">Height</label>
+                <div class="input-group" style="width: 150px;">
+                    <input type="number" class="form-control" aria-describedby="height-input-group" name="height-input" id="height-input">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="height-input-group">cm</span>
+                    </div>
+                </div>                
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="date-form">Measure Date</label>
+                <input type="date" class="form-control" style="width: 150px;" name="date-input" id="date-input">
+            </div>
+            <div class="col-sm-3 text-left">
+                <button class="btn btn-primary" type="submit">Add Measure</button>
+            </div> 
+        </form>  
+        <table class="table p-5">
+            <thead>
+                <tr>
+                    <th scope="weight">Weight</th>
+                    <th scope="height">Height</th>
+                    <th scope="date">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for measure in measures%}
+                    <tr>
+                        <th>{{measure.weight}}</th>
+                        <th>{{measure.height}}</th>
+                        <th>{{measure.date}}</th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Success and Error messages-->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}                
+                <div class="alert alert-success" role="alert">
+                    {{message}}
+                </div>                    
+                {% endfor %}            
+            {% endif %}
+        {% endwith %}
+
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{error}}
+          </div>
+        {% endif %}
+    </div>
+{% endblock %}
