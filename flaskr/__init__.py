@@ -1,12 +1,29 @@
+import os
 from flask import Flask, render_template, request, redirect, flash
 from flaskr.measure import Measure
+from flask_pymongo import PyMongo
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_mapping(
-        SECRET_KEY= 'dev'
+        SECRET_KEY= 'dev',
+        MONGO_URI='mongodb+srv://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ['MONGODB_PASSWORD'] + '@' 
+                   + os.environ['MONGODB_HOST'] + '/' + os.environ['MONGODB_DATABASE'] + '?retryWrites=true&w=majority'
     )
+
+    mongo = PyMongo(app)
+    db = mongo.db
+
+    user = {"name":"user_test"}
+
+    result = db.users.insert_one(user)
+
+    print(result.acknowledged)
+
+    app_users = db.users.find()
+    for app_user in app_users:
+        print(app_user['name'])
 
     measures = []
 
