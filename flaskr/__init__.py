@@ -1,8 +1,10 @@
 import os
-from flask import Flask, render_template, request, redirect, flash
-from flaskr.measure import Measure
-from flask_pymongo import PyMongo
-
+import json
+import datetime
+from flask import Flask
+from flaskr.models.measure import Measure
+from bson.objectid import ObjectId
+from .database import mongo
 
 def create_app():
     app = Flask(__name__)
@@ -12,37 +14,28 @@ def create_app():
                    + os.environ['MONGODB_HOST'] + '/' + os.environ['MONGODB_DATABASE'] + '?retryWrites=true&w=majority'
     )
 
-    mongo = PyMongo(app)
-    db = mongo.db
+    # Connect with mongo and store the connection pool
+    mongo.init_app(app)
 
-    user = {"name":"user_test"}
+    #Using JsonEnconder for mongo ObjectId and date
+    class JsonEnconder(json.JSONEncoder):
+        def default(self, o):
+            if isinstance(o, ObjectId):
+                return str(o)
+            if isinstance(o, datetime.datetime):
+                return str(o)
+            return json.JSONEncoder.default(self, o)
 
-    result = db.users.insert_one(user)
+    app.json_encoder = JsonEnconder
 
-    print(result.acknowledged)
+    # Registering blueprints
+    from . import auth, measure
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(measure.bp)
+    
+    #user = mongo.db.users.find_one({"_id": ObjectId("5fb9acde5739c817ed891ab2")})
+    #print(user)
 
-    app_users = db.users.find()
-    for app_user in app_users:
-        print(app_user['name'])
-
-    measures = []
-
-    @app.route('/', methods=['POST', 'GET'])
-    def index():
-        if request.method == 'POST':
-            weight = request.form['weight-input']
-            height = request.form['height-input']
-            date = request.form['date-input']
-
-            if (not weight) or (not height) and (not date):
-                error = "You need to fill date and one more field!"
-                return render_template('index.html', measures=measures, error=error)
-
-            new_measure = Measure(weight, height, date)
-            measures.append(new_measure)
-            flash("Measure added")
-            return redirect('/')
-        else:
-            return  render_template('index.html', measures=measures)
+    app.add_url_rule('/', endpoint='index')
 
     return app

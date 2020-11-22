@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
-{%block measure %}
-    <div class="container p-5"> 
+{%block head%}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{%block body %}
+    <div class="container p-3 p-lg-5"> 
         <form class="row align-items-center" action="/" method="POST">   
             <div class="col-sm-3 form-group">
                 <label for="Weight-form">Weight</label>
@@ -29,7 +33,7 @@
                 <button class="btn btn-primary" type="submit">Add Measure</button>
             </div> 
         </form>  
-        <table class="table p-5">
+        <table class="table p-lg-5">
             <thead>
                 <tr>
                     <th scope="weight">Weight</th>
@@ -38,17 +42,17 @@
                 </tr>
             </thead>
             <tbody>
-                {% for measure in measures%}
+                {% for measure in measures %}
                     <tr>
                         <th>{{measure.weight}}</th>
                         <th>{{measure.height}}</th>
-                        <th>{{measure.date}}</th>
+                        <th>{{measure.created_at}}</th>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
         <!-- Success and Error messages-->
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(category_filter=["success"]) %}
             {% if messages %}
                 {% for message in messages %}                
                 <div class="alert alert-success" role="alert">
@@ -57,11 +61,14 @@
                 {% endfor %}            
             {% endif %}
         {% endwith %}
-
-        {% if error %}
-        <div class="alert alert-danger" role="alert">
-            {{error}}
-          </div>
-        {% endif %}
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+            {% if messages %}
+                {% for message in messages %}                
+                <div class="alert alert-danger" role="alert">
+                    {{message}}
+                </div>
+                {% endfor %}            
+            {% endif %}
+        {% endwith %}
     </div>
 {% endblock %}

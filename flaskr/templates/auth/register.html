@@ -1,0 +1,41 @@
+{% extends 'base.html'%}
+
+{%block head%}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/register.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container p-lg-5">
+        <form class='row form-signin' method="POST">
+            <label class="sr-only" for="inputName">Name</label>
+            <input id="inputName" name="inputName" class="form-control" type="text" placeholder="Name" required="" autofocus="">
+            <label class="sr-only" for="inputEmail">Email</label>
+            <input id="inputEmail" name="inputEmail" class="form-control" type="email" placeholder="Email" required="">
+            <label class="sr-only" for="inputEmail">Password</label>
+            <input id="inputPassword" name="inputPassword" class="form-control" type="password" placeholder="Password" required="">
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>   
+            <a href="{{url_for('auth.login')}}">Already have a account? Log In</a> 
+        </form>
+       <!-- Success and Error messages-->
+       {% with messages = get_flashed_messages(category_filter=["success"]) %}
+            {% if messages %}
+                {% for message in messages %}                
+                <div class="alert alert-success" role="alert">
+                    {{message}}
+                </div>                    
+                {% endfor %}            
+            {% endif %}
+        {% endwith %}
+        {% with messages = get_flashed_messages(category_filter=["error"]) %}
+            {% if messages %}
+                {% for message in messages %}                
+                <div class="alert alert-danger" role="alert">
+                    {{message}}
+                </div>
+                {% endfor %}            
+            {% endif %}
+        {% endwith %}
+    </div>  
+
+{% endblock%}

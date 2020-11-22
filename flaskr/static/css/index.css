@@ -1,0 +1,18 @@
+#title {
+    background-color: #4BB;
+    border-radius: .25rem;
+    color: rgb(255, 255, 255);
+    max-height: 130px;
+}
+
+#text-title {
+    font-size: 40px;
+    font-family: 'Lora', serif;
+    font-weight: bold;
+}
+
+.logout {
+    background-color: whitesmoke; 
+    font-size: 20; 
+    font-weight: bold;
+}
