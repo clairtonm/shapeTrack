@@ -9,7 +9,6 @@ from .database import mongo
 def create_app():
     app = Flask(__name__)
     app.config.from_mapping(
-        SECRET_KEY= 'dev',
         MONGO_URI='mongodb+srv://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ['MONGODB_PASSWORD'] + '@' 
                    + os.environ['MONGODB_HOST'] + '/' + os.environ['MONGODB_DATABASE'] + '?retryWrites=true&w=majority'
     )
