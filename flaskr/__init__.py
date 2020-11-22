@@ -10,7 +10,8 @@ def create_app():
     app = Flask(__name__)
     app.config.from_mapping(
         MONGO_URI='mongodb+srv://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ['MONGODB_PASSWORD'] + '@' 
-                   + os.environ['MONGODB_HOST'] + '/' + os.environ['MONGODB_DATABASE'] + '?retryWrites=true&w=majority'
+                   + os.environ['MONGODB_HOST'] + '/' + os.environ['MONGODB_DATABASE'] + '?retryWrites=true&w=majority',
+        SECRET_KEY=os.environ['SECRET_KEY']
     )
 
     # Connect with mongo and store the connection pool
