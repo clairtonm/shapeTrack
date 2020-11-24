@@ -11,7 +11,8 @@ def create_app():
     app.config.from_mapping(
         MONGO_URI='mongodb+srv://' + os.environ['MONGODB_USERNAME'] + ':' + os.environ['MONGODB_PASSWORD'] + '@' 
                    + os.environ['MONGODB_HOST'] + '/' + os.environ['MONGODB_DATABASE'] + '?retryWrites=true&w=majority',
-        SECRET_KEY=os.environ['SECRET_KEY']
+        SECRET_KEY="DEV"
+        #SECRET_KEY=os.environ['SECRET_KEY']
     )
 
     # Connect with mongo and store the connection pool
@@ -33,11 +34,7 @@ def create_app():
     app.register_blueprint(auth.bp)
     app.register_blueprint(measure.bp)
     
-    #user = mongo.db.users.find_one({"_id": ObjectId("5fb9acde5739c817ed891ab2")})
-    #print(user)
-
     app.add_url_rule('/', endpoint='index')
-
     return app
 
 app = create_app()

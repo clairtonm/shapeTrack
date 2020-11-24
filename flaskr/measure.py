@@ -14,15 +14,23 @@ from tzlocal import get_localzone
 bp = Blueprint("measure", __name__)
 db = mongo.db
 
-@bp.route("/", methods=['POST', 'GET'])
-@login_required
-def index():    
+def get_measures():
     measures = []
-
     # Converte the timezone when get the datetime from mongodb
     aware_timez = db.measures.with_options(codec_options=CodecOptions(
     tz_aware=True,
     tzinfo=pytz.timezone(get_localzone().zone)))
+
+    for measure in aware_timez.find({"user_id": g.user['_id']}):
+        measures.append(Measure(measure['weight'], 
+                        measure['height'], 
+                        measure['created_at'].date()))
+    return measures
+
+@bp.route("/", methods=['POST', 'GET'])
+@login_required
+def index():    
+    measures = []    
 
     if request.method == 'POST':
             weight = request.form['weight-input']
@@ -30,6 +38,7 @@ def index():
 
             if (not weight) or (not height): 
                 flash('You need to fill weight field!', 'error')
+                measures = get_measures()
                 return render_template('index.html', measures=measures)
 
             db.measures.insert_one({
@@ -40,16 +49,10 @@ def index():
             })
             flash('Measure added', 'success')
 
-            for measure in aware_timez.find({"user_id": g.user['_id']}):
-                measures.append(Measure(measure['weight'], 
-                                        measure['height'], 
-                                        measure['created_at'].date()))
+            measures = get_measures()
             return render_template('index.html', measures=measures)
     else:        
-        for measure in aware_timez.find({"user_id": g.user['_id']}):
-                measures.append(Measure(measure['weight'], 
-                                        measure['height'], 
-                                        measure['created_at'].date()))
+        measures = get_measures()
         return  render_template('index.html', measures=measures)
 
 @bp.before_request
