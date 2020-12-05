@@ -39,15 +39,17 @@ def register():
                     "password": generate_password_hash(password),
                     "created_at": datetime.datetime.utcnow()
                 })
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.register_personal_info'))
 
-        app_users = db.users.find()
-        for app_user in app_users:
-            print(app_user['name'])
-        
         flash(error, 'error')
     
     return render_template('auth/register.html')
+
+@bp.route('/register/personalInfo', methods=('GET', 'POST'))
+def register_personal_info():
+    if request.method == 'POST':
+        print("POST")
+    return render_template('auth/registerPersonalInfo.html')
 
 @bp.route('/login', methods=['POST', 'GET'])
 def login():
