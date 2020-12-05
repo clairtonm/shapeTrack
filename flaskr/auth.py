@@ -39,6 +39,11 @@ def register():
                     "password": generate_password_hash(password),
                     "created_at": datetime.datetime.utcnow()
                 })
+
+            user = db.users.find_one({"email": email})
+            session.clear()
+            session['user_id'] = user['_id']
+
             return redirect(url_for('auth.register_personal_info'))
 
         flash(error, 'error')
@@ -48,7 +53,24 @@ def register():
 @bp.route('/register/personalInfo', methods=('GET', 'POST'))
 def register_personal_info():
     if request.method == 'POST':
-        print("POST")
+        username = request.form['inputName']
+        birthdate = request.form['inputBirthDate']
+        country = request.form['inputCountry']
+        state = request.form['inputState']
+        city = request.form['inputCity']
+        height = request.form['inputHeight']
+
+        db.users.insert_one({
+            "name": username,
+            "birthdate": birthdate,
+            "country": country,
+            "state": state,
+            "city": city,
+            "height": height
+        })
+        
+        return redirect(url_for('index'))
+
     return render_template('auth/registerPersonalInfo.html')
 
 @bp.route('/login', methods=['POST', 'GET'])
