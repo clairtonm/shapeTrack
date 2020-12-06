@@ -23,7 +23,6 @@ def get_measures():
 
     for measure in aware_timez.find({"user_id": g.user['_id']}):
         measures.append(Measure(measure['weight'], 
-                        measure['height'], 
                         measure['created_at'].date()))
     return measures
 
@@ -34,9 +33,8 @@ def index():
 
     if request.method == 'POST':
             weight = request.form['weight-input']
-            height = request.form['height-input']
 
-            if (not weight) or (not height): 
+            if not weight: 
                 flash('You need to fill weight field!', 'error')
                 measures = get_measures()
                 return render_template('index.html', measures=measures)
@@ -44,7 +42,6 @@ def index():
             db.measures.insert_one({
                 "user_id" : g.user['_id'],
                 "weight" : weight,
-                "height" : height,
                 "created_at" : datetime.datetime.utcnow()
             })
             flash('Measure added', 'success')
