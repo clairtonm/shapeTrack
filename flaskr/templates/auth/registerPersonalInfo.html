@@ -21,15 +21,15 @@
             </div>            
         </div>
         <div class="form-group row">
-            <label for="inputBirthDate" class="col-sm-1 col-form-label">Birth Date</label>
+            <label for="inputBirthDate" class="col-sm-1 col-form-label">Date of Birth</label>
             <div class="col-sm-2">
-                <input type="date" class="form-control" id="inputBirthDate">
+                <input type="date" class="form-control" id="inputBirthDate" name="inputBirthDate">
             </div>            
         </div>
         <div class="form-group row">
             <label for="inputCountry" class="col-sm-1 col-form-label">Country</label>
             <div class="col-sm-3">
-                <select class="selectpicker countrypicker" id="inputCountry"></select>
+                <select class="selectpicker countrypicker" id="inputCountry" name="inputCountry" data-default="BR"></select>
                 <script>
                     $('.countrypicker').countrypicker();
                   </script>
@@ -38,20 +38,34 @@
         <div class="form-group row">
             <label for="inputState" class="col-sm-1 col-form-label">State/ Province</label>
             <div class="col-sm-2">
-                <input type="text" class="form-control" id="inputState" placeholder="CE, SP, NY ...">
-            </div>            
+                <input type="text" class="form-control" id="inputState" name="inputState" placeholder="CE, SP, NY ...">
+            </div>
         </div>
         <div class="form-group row">
             <label for="inputCity" class="col-sm-1 col-form-label">City</label>
             <div class="col-sm-3">
-                <input type="text" class="form-control" id="inputCity">
-            </div>            
+                <input type="text" class="form-control" id="inputCity" name="inputCity">
+            </div>
         </div>
         <div class="form-group row">
             <label for="inputHeight" class="col-sm-1 col-form-label">Height</label>
             <div class="col-sm-3">
-                <input type="text" class="form-control" id="inputHeight" placeholder="cm">
-            </div>            
+                <input type="text" class="form-control" id="inputHeight" name="inputHeight" placeholder="cm">
+            </div>
+        </div>
+        <div class="row com-sm-6 p-lg-2">
+            <div class="form-check-inline">
+                <input type="radio" class="form-check-input" id="inputFemale" name="inputSex" value="female">
+                <label for="inputFemale" class="form-check-label">Female</label>
+            </div>
+            <div class="form-check-inline">
+                <input type="radio" class="form-check-input" id="inputMale" name="inputSex" value="male">
+                <label for="inputMale" class="form-check-label">Male</label>
+            </div>
+            <div class="form-check-inline">
+                <input type="radio" class="form-check-input" id="inputBlank" name="inputSex" value="blank" checked>
+                <label for="inputBlank" class="form-check-label">Prefer not to say</label>
+            </div>
         </div>
         <button class="col-sm-2 btn btn-lg btn-primary btn-block" type="submit">Save</button>
     </form>

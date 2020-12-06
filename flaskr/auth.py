@@ -15,26 +15,20 @@ db = mongo.db
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
-        username = request.form['inputName']
         email = request.form['inputEmail']
         password = request.form['inputPassword']
         error = None
 
-        if not username:
-            error = 'Username is required'
-        elif not email:
+        if not email:
             error = 'Email is required'
         elif not password:
             error = 'Password is required'
-        elif (db.users.find_one({"name": username}) is not None):
-            error = 'User {} is already registered'.format(username)
         elif (db.users.find_one({"email": email}) is not None):
             error = 'Email {} is already registered'.format(email)
         
         if error is None:
             db.users.insert_one(
                 {
-                    "name": username, 
                     "email": email, 
                     "password": generate_password_hash(password),
                     "created_at": datetime.datetime.utcnow()
@@ -53,23 +47,42 @@ def register():
 @bp.route('/register/personalInfo', methods=('GET', 'POST'))
 def register_personal_info():
     if request.method == 'POST':
-        username = request.form['inputName']
-        birthdate = request.form['inputBirthDate']
-        country = request.form['inputCountry']
-        state = request.form['inputState']
-        city = request.form['inputCity']
-        height = request.form['inputHeight']
-
-        db.users.insert_one({
-            "name": username,
-            "birthdate": birthdate,
-            "country": country,
-            "state": state,
-            "city": city,
-            "height": height
-        })
+        userDict = {
+            "username" : request.form['inputName'],
+            "birthdate" : request.form['inputBirthDate'],
+            "country" : request.form['inputCountry'],
+            "state" : request.form['inputState'],
+            "city" : request.form['inputCity'],
+            "height" : request.form['inputHeight'],
+            "sex" : request.form['inputSex'],
+        }
         
-        return redirect(url_for('index'))
+        # Deleting fields without information 
+        list_to_delete = []
+
+        for (key, value) in userDict.items():
+            if value is None or value == "":
+                list_to_delete.append(key)
+
+        for key in list_to_delete:
+            del userDict[key]
+
+        user_id = session.get('user_id')
+
+        if user_id is not None:
+            # update_one(filter, modifiedDocument)
+            db.users.find_one_and_update(
+                {
+                    "_id": ObjectId(user_id)
+                }, 
+                { "$set" : userDict
+                }
+            )
+        else:
+            flash("Couldn't retrieve user from session", "error")
+            return render_template('auth/login.html')
+        
+        return redirect(url_for('index'))        
 
     return render_template('auth/registerPersonalInfo.html')
 
