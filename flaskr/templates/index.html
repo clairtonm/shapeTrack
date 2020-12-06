@@ -37,7 +37,6 @@
             <thead>
                 <tr>
                     <th scope="weight">Weight</th>
-                    <th scope="height">Height</th>
                     <th scope="date">Date</th>
                 </tr>
             </thead>
@@ -45,7 +44,6 @@
                 {% for measure in measures %}
                     <tr>
                         <th>{{measure.weight}}</th>
-                        <th>{{measure.height}}</th>
                         <th>{{measure.created_at}}</th>
                     </tr>
                 {% endfor %}
